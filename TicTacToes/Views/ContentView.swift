@@ -25,19 +25,14 @@ struct ContentView: View {
                 ForEach(Array(viewModel.board.enumerated()), id: \.0) { rowIndex, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.0) { colIndex, tile in
-                            if tile == TileState.x.symbol {
-                                Image(systemName: TileState.x.imageName)
+                            switch tile {
+                            case .x, .o:
+                                Image(systemName: tile.imageName)
                                     .resizable()
-                                    .frame(width: 60.0, height: 60.0)
+                                    .frame(width: Constants.tileLength, height: Constants.tileLength)
                                     .padding(16)
                                     .border(.black, width: 5)
-                            } else if tile == TileState.o.symbol {
-                                Image(systemName: TileState.o.imageName)
-                                    .resizable()
-                                    .frame(width: 60.0, height: 60.0)
-                                    .padding(16)
-                                    .border(.black, width: 5)
-                            } else {
+                            case .empty:
                                 Button {
                                     if viewModel.gameState == .ongoing {
                                         viewModel.tileTappedAt(row: rowIndex, col: colIndex)
@@ -45,7 +40,7 @@ struct ContentView: View {
                                 } label: {
                                     Rectangle()
                                         .fill(.white)
-                                        .frame(width: 60.0, height: 60.0)
+                                        .frame(width: Constants.tileLength, height: Constants.tileLength)
                                 }
                                 .padding(16)
                                 .border(.black, width: 5)
@@ -70,7 +65,7 @@ struct ContentView: View {
             .padding(20)
         }
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height, alignment: .center)
-        .background(Color(red: 220.0/255.0, green: 220.0/255.0, blue: 220.0/255.0))
+        .background(Constants.backgroundColor)
         .alert(isPresented: $viewModel.showingWinAlert) {
             Alert(title: Text("Congratulations \(viewModel.currentPlayer.title)"),
                   message: Text("You won!"),

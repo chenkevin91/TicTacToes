@@ -12,6 +12,10 @@
 		E1965BFE2BF3AAFB003327DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1965BFD2BF3AAFB003327DD /* Assets.xcassets */; };
 		E1965C012BF3AAFB003327DD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1965C002BF3AAFB003327DD /* Preview Assets.xcassets */; };
 		E1965C082BF3D101003327DD /* ContentView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1965C072BF3D100003327DD /* ContentView-ViewModel.swift */; };
+		E1965C0B2BF3F1FD003327DD /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1965C0A2BF3F1FD003327DD /* Player.swift */; };
+		E1965C0F2BF3F4F8003327DD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1965C0E2BF3F4F8003327DD /* Constants.swift */; };
+		E1965C112BF3F6D9003327DD /* TileState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1965C102BF3F6D9003327DD /* TileState.swift */; };
+		E1965C132BF3F6E5003327DD /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1965C122BF3F6E5003327DD /* GameState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +25,10 @@
 		E1965BFD2BF3AAFB003327DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1965C002BF3AAFB003327DD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E1965C072BF3D100003327DD /* ContentView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView-ViewModel.swift"; sourceTree = "<group>"; };
+		E1965C0A2BF3F1FD003327DD /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		E1965C0E2BF3F4F8003327DD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		E1965C102BF3F6D9003327DD /* TileState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileState.swift; sourceTree = "<group>"; };
+		E1965C122BF3F6E5003327DD /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,9 +62,10 @@
 			isa = PBXGroup;
 			children = (
 				E1965C092BF3EA3C003327DD /* Models */,
+				E1965C0C2BF3F4CD003327DD /* Views */,
+				E1965C0D2BF3F4D5003327DD /* ViewModels */,
 				E1965BF92BF3AAF9003327DD /* TicTacToesApp.swift */,
-				E1965BFB2BF3AAF9003327DD /* ContentView.swift */,
-				E1965C072BF3D100003327DD /* ContentView-ViewModel.swift */,
+				E1965C0E2BF3F4F8003327DD /* Constants.swift */,
 				E1965BFD2BF3AAFB003327DD /* Assets.xcassets */,
 				E1965BFF2BF3AAFB003327DD /* Preview Content */,
 			);
@@ -74,8 +83,27 @@
 		E1965C092BF3EA3C003327DD /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E1965C122BF3F6E5003327DD /* GameState.swift */,
+				E1965C0A2BF3F1FD003327DD /* Player.swift */,
+				E1965C102BF3F6D9003327DD /* TileState.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		E1965C0C2BF3F4CD003327DD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E1965BFB2BF3AAF9003327DD /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E1965C0D2BF3F4D5003327DD /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				E1965C072BF3D100003327DD /* ContentView-ViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +176,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1965C132BF3F6E5003327DD /* GameState.swift in Sources */,
+				E1965C0F2BF3F4F8003327DD /* Constants.swift in Sources */,
+				E1965C112BF3F6D9003327DD /* TileState.swift in Sources */,
+				E1965C0B2BF3F1FD003327DD /* Player.swift in Sources */,
 				E1965BFC2BF3AAF9003327DD /* ContentView.swift in Sources */,
 				E1965C082BF3D101003327DD /* ContentView-ViewModel.swift in Sources */,
 				E1965BFA2BF3AAF9003327DD /* TicTacToesApp.swift in Sources */,
