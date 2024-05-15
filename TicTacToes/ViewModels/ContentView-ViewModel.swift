@@ -7,6 +7,17 @@
 
 import Foundation
 
+enum Direction {
+    case left
+    case right
+    case up
+    case down
+    case upRight
+    case downLeft
+    case upLeft
+    case downRight
+}
+
 extension ContentView {
     class ViewModel: ObservableObject {
         @Published var currentPlayer: Player = .o
@@ -28,7 +39,7 @@ extension ContentView {
             case .o:
                 board[row][col] = TileState.o(isWinningTile: false)
             }
-            if didWinAt(row: row, col: col) {
+            if didWinAt(row: row, col: col, goal: Constants.gridSize) {
                 createWinningTiles()
                 gameState = .done
                 showingWinAlert = true
@@ -37,61 +48,17 @@ extension ContentView {
             }
         }
 
-        private func didWinAt(row: Int, col: Int) -> Bool {
-            let target = Constants.gridSize
-
-            // Check row
-            for x in 0..<target {
-                guard currentPlayer.symbol == board[row][x].symbol else { break }
-                winningCoordinates.append((row, x))
-                if x == target - 1 {
-                    return true
-                }
-            }
-            winningCoordinates = []
-
-            // Check column
-            for y in 0..<target {
-                guard currentPlayer.symbol == board[y][col].symbol else { break }
-                winningCoordinates.append((y, col))
-                if y == target - 1 {
-                    return true
-                }
-            }
-            winningCoordinates = []
-
-            // Check diagonal
-            if row == col {
-                for i in 0..<target {
-                    guard currentPlayer.symbol == board[i][i].symbol else { break }
-                    winningCoordinates.append((i, i))
-                    if i == target - 1 {
-                        return true
-                    }
-                }
-            }
-            winningCoordinates = []
-
-            // Check reverse-diagonal
-            if row + col == target - 1 {
-                for i in 0..<target {
-                    guard currentPlayer.symbol == board[i][target - 1 - i].symbol else { break }
-                    winningCoordinates.append((i, target - 1 - i))
-                    if i == target - 1 {
-                        return true
-                    }
-                }
-            }
-            winningCoordinates = []
-
-            return checkCorners() || checkSquare(row: row, col: col)
+        private func didWinAt(row: Int, col: Int, goal: Int) -> Bool {
+            return checkVertical(row: row, col: col, goal: goal) || checkHorizontal(row: row, col: col, goal: goal) ||
+            checkDiagonal(row: row, col: col, goal: goal) || checkRevDiagonal(row: row, col: col, goal: goal) ||
+            checkCorners() || checkSquare(row: row, col: col)
         }
 
         private func checkCorners() -> Bool {
             let lastIndex = Constants.gridSize - 1
-            if currentPlayer.symbol == board[0][0].symbol && 
+            if currentPlayer.symbol == board[0][0].symbol &&
                 currentPlayer.symbol == board[0][lastIndex].symbol &&
-                currentPlayer.symbol == board[lastIndex][0].symbol && 
+                currentPlayer.symbol == board[lastIndex][0].symbol &&
                 currentPlayer.symbol == board[lastIndex][lastIndex].symbol {
                 winningCoordinates = [(0, 0), (0, lastIndex), (lastIndex, 0), (lastIndex, lastIndex)]
                 return true
@@ -104,7 +71,7 @@ extension ContentView {
             var results = [Bool]()
 
             // Check above-right square if possible
-            if row > 0 && col < board[0].count - 1 {
+            if row > 0 && col < Constants.gridSize - 1 {
                 results.append(currentPlayer.symbol == board[row - 1][col].symbol &&
                                currentPlayer.symbol == board[row - 1][col + 1].symbol &&
                                currentPlayer.symbol == board[row][col + 1].symbol)
@@ -122,7 +89,7 @@ extension ContentView {
                 }
             }
             // Check bottom-right square if possible
-            if row < board.count - 1 && col < board[0].count - 1 {
+            if row < Constants.gridSize - 1 && col < Constants.gridSize - 1 {
                 results.append(currentPlayer.symbol == board[row][col + 1].symbol &&
                                currentPlayer.symbol == board[row + 1][col].symbol &&
                                currentPlayer.symbol == board[row + 1][col + 1].symbol)
@@ -131,7 +98,7 @@ extension ContentView {
                 }
             }
             // Check bottom-left square if possible
-            if row < board.count - 1 && col > 0 {
+            if row < Constants.gridSize - 1 && col > 0 {
                 results.append(currentPlayer.symbol == board[row][col - 1].symbol &&
                                currentPlayer.symbol == board[row + 1][col - 1].symbol &&
                                currentPlayer.symbol == board[row + 1][col].symbol)
@@ -141,6 +108,88 @@ extension ContentView {
             }
 
             return results.reduce(false) { $0 || $1 }
+        }
+
+        private func checkHorizontal(row: Int, col: Int, goal: Int) -> Bool {
+            let left = checkValue(row: row, col: col - 1, direction: .left)
+            let right = checkValue(row: row, col: col + 1, direction: .right)
+
+            if left + right + 1 >= goal {
+                winningCoordinates.append((row, col))
+                return true
+            } else {
+                winningCoordinates = []
+                return false
+            }
+        }
+
+        private func checkVertical(row: Int, col: Int, goal: Int) -> Bool {
+            let up = checkValue(row: row - 1, col: col, direction: .up)
+            let down = checkValue(row: row + 1, col: col, direction: .down)
+
+            if up + down + 1 >= goal {
+                winningCoordinates.append((row, col))
+                return true
+            } else {
+                winningCoordinates = []
+                return false
+            }
+        }
+
+        private func checkDiagonal(row: Int, col: Int, goal: Int) -> Bool {
+            let downRight = checkValue(row: row + 1, col: col + 1, direction: .downRight)
+            let upLeft = checkValue(row: row - 1, col: col - 1, direction: .upLeft)
+
+            if downRight + upLeft + 1 >= goal {
+                winningCoordinates.append((row, col))
+                return true
+            } else {
+                winningCoordinates = []
+                return false
+            }
+        }
+
+        private func checkRevDiagonal(row: Int, col: Int, goal: Int) -> Bool {
+            let upRight = checkValue(row: row - 1, col: col + 1, direction: .upRight)
+            let downLeft = checkValue(row: row + 1, col: col - 1, direction: .downLeft)
+
+            if upRight + downLeft + 1 >= goal {
+                winningCoordinates.append((row, col))
+                return true
+            } else {
+                winningCoordinates = []
+                return false
+            }
+        }
+
+        private func checkValue(row: Int, col: Int, direction: Direction) -> Int {
+            guard row >= 0,
+                  row < Constants.gridSize,
+                  col >= 0,
+                  col < Constants.gridSize,
+                  board[row][col].symbol == currentPlayer.symbol
+            else { return 0 }
+
+            winningCoordinates.append((row, col))
+
+            switch direction {
+            case .left:
+                return checkValue(row: row, col: col - 1, direction: .left) + 1
+            case .right:
+                return checkValue(row: row, col: col + 1, direction: .right) + 1
+            case .up:
+                return checkValue(row: row - 1, col: col, direction: .up) + 1
+            case .down:
+                return checkValue(row: row + 1, col: col, direction: .down) + 1
+            case .upRight:
+                return checkValue(row: row - 1, col: col + 1, direction: .upRight) + 1
+            case .downLeft:
+                return checkValue(row: row + 1, col: col - 1, direction: .downLeft) + 1
+            case .upLeft:
+                return checkValue(row: row - 1, col: col - 1, direction: .upLeft) + 1
+            case .downRight:
+                return checkValue(row: row + 1, col: col + 1, direction: .downRight) + 1
+            }
         }
 
         private func createWinningTiles() {
