@@ -32,6 +32,7 @@ struct ContentView: View {
                                     .frame(width: Constants.tileLength, height: Constants.tileLength)
                                     .padding(16)
                                     .border(.black, width: 5)
+                                    .foregroundStyle(tile.color)
                             case .empty:
                                 Button {
                                     if viewModel.gameState == .ongoing {

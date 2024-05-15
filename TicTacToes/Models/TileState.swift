@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum TileState {
-    case x
-    case o
+    case x(isWinningTile: Bool)
+    case o(isWinningTile: Bool)
     case empty
 
     var symbol: Character {
@@ -31,6 +32,15 @@ enum TileState {
             return "circle"
         case .empty:
             return ""
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case let .x(isWinningTile), let .o(isWinningTile):
+            return isWinningTile ? .green : .black
+        case .empty:
+            return .black
         }
     }
 }
